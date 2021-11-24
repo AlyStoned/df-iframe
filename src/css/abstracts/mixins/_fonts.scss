@@ -1,0 +1,8 @@
+
+@mixin font_default() {
+  font-family: "ProximaNova", Helvetica, Arial, sans-serif;
+}
+
+@mixin font_condensed() {
+  font-family: "RobotoCondensed", sans-serif;
+}

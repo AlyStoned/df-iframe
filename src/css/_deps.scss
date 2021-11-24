@@ -1,0 +1,14 @@
+///
+/// Только переменные, функции и миксины!
+/// Предназначен для импорта глобального окружения в других SCSS-файлах.
+///
+
+@import "abstracts/variables";
+@import "abstracts/functions/rem";
+@import "abstracts/mixins/media";
+@import "abstracts/mixins/flex_columns";
+@import "abstracts/mixins/padding";
+@import "abstracts/mixins/font_size";
+@import "abstracts/mixins/fonts";
+@import "abstracts/mixins/underline";
+@import "abstracts/mixins/placeholder";

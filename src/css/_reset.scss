@@ -1,0 +1,97 @@
+// Based on [Eric Meyer's reset 2.0](http://meyerweb.com/eric/tools/css/reset/index.html)
+// Global reset rules.
+// For more specific resets, use the reset mixins provided below
+// Unrecognized elements are displayed inline.
+// This reset provides a basic reset for block html5 elements
+// so they are rendered correctly in browsers that don't recognize them
+// and reset in browsers that have default styles for them.
+
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, sub, sup, tt, var,
+b, u, i, center, hr,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+  box-sizing: border-box;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: none;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+img {
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+picture {
+  display: inline-block;
+  max-width: 100%;
+}
+
+// Correct overflow not hidden in IE 9/10/11.
+svg:not(:root) {
+  overflow: hidden;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: none;
+
+  &:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+label {
+  display: inline-block;
+
+  &[for] {
+    cursor: pointer;
+  }
+}
+
+textarea {
+  resize: none;
+  overflow: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+
+  img {
+    border: none;
+  }
+
+  &:hover {
+    text-decoration: none;
+    opacity: .8;
+  }
+}

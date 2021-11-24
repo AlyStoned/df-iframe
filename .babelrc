@@ -1,0 +1,34 @@
+{
+  "presets": [
+    ["@babel/preset-env", {
+      "exclude": ["transform-async-to-generator", "transform-regenerator"],
+      "loose": true,
+      "modules": false,
+      "targets": { "node": 6 }
+    }]
+  ],
+  "plugins": [
+    "lodash",
+    "@babel/plugin-transform-runtime",
+    "@babel/plugin-syntax-dynamic-import",
+    ["@babel/plugin-proposal-class-properties", { "loose": true }],
+    ["module:fast-async", { "spec": true }],
+    ["transform-imports", {
+      "lodash": {
+        "transform": "lodash/${member}",
+        "preventFullImport": true
+      }
+    }]
+  ],
+  "env": {
+    "test": {
+      "presets": [
+        ["@babel/preset-env", {
+          "exclude": ["transform-async-to-generator", "transform-regenerator"],
+          "loose": true,
+          "targets": { "node": "current" }
+        }]
+      ]
+    }
+  }
+}

@@ -1,0 +1,8 @@
+@font-face {
+	font-family: 'RobotoCondensed';
+	font-weight: 700;
+	font-style: normal;
+    src: url('/fonts/RobotoCondensedBold/robotocondensed-bold.woff2') format('woff2'),
+         url('/fonts/RobotoCondensedBold/robotocondensed-bold.woff') format('woff'),
+         url('/fonts/RobotoCondensedBold/robotocondensed-bold.ttf') format('truetype');
+}

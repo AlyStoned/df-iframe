@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>DF-iframe</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="referrer" content="unsafe-url">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script>
+      // recognize device
+      if (!(matchMedia('(hover: none)').matches)) {
+          document.documentElement.classList.add('can-hover');
+      }
+  </script>
+</head>
+<body>
+<div id="app-page">
+  <div id="app-content">
+    <!--    <header id="app-header">-->
+    <!--      <div class="header-inner">-->
+    <!--        <nav class="nav">-->
+    <!--          <a class="nav-link" href="/">home</a>-->
+    <!--          <a class="nav-link" href="./bets.html" data-ms-content="bets">bets</a>-->
+    <!--          <a class="nav-link" href="#/ms/profile">profile</a>-->
+    <!--          <a class="nav-link" href="#/ms/login">log in</a>-->
+    <!--          <a class="nav-link" href="#/ms/logout">logout</a>-->
+    <!--        </nav>-->
+    <!--      </div>-->
+    <!--    </header>-->
+
+    <main id="app-main">
+      <div class="iframe-wrapper">
+        <!--        <div class="container">-->
+        <!--          <div class="iframe-inner">-->
+
+        <!--          </div>-->
+        <!--        </div>-->
+        <iframe id="df-iframe"
+                title="DF Iframe Example"
+                class="df-iframe"
+                frameborder="0"
+                src="https://app-test-valera.digifabster.com/4taps/widget/upload">
+        </iframe>
+      </div>
+    </main>
+  </div>
+</div>
+</body>
+</html>

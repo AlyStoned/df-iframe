@@ -1,0 +1,33 @@
+{
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true,
+    "es2020": true,
+    "node": true,
+    "jest": true
+  },
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "node": true,
+      "jest": true,
+      "modules": true
+    }
+  },
+  "plugins": [
+    "jest",
+    "jest-dom",
+    "testing-library"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:jest/recommended",
+    "plugin:jest-dom/recommended"
+  ],
+  "rules": {
+    "no-debugger": "off",
+    "no-console": "off",
+    "no-unused-vars": "warn"
+  }
+}

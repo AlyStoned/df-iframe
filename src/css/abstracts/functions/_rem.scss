@@ -1,0 +1,13 @@
+///
+///  Функция, конвертирующая px в rem
+///
+
+$base-font-size: 16px !default;
+
+@function rem($value) {
+  @if unitless($value) {
+    $value: $value * 1px;
+  }
+  $rem: $value / $base-font-size;
+  @return $rem * 1rem;
+}
