@@ -60,10 +60,6 @@
     "webpack-dev-server": "^3.11.0",
     "webpack-merge": "^5.1.2"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/AlyStoned/df-iframe.git"
-  },
   "author": "",
   "license": "ISC",
   "homepage": "https://github.com/AlyStoned/df-iframe",
