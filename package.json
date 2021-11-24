@@ -2,7 +2,7 @@
   "name": "df-iframe",
   "version": "0.0.1",
   "description": "df-iframe",
-  "main": "index.js",
+  "main": "src/js/app.js",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "predeploy": "npm run build && node predeploy.js",
