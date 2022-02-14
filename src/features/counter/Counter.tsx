@@ -1,81 +1,117 @@
+import cn from 'classnames';
 import React, { useState } from 'react';
+import { nanoid } from '@reduxjs/toolkit';
+import { useDropzone, DropzoneOptions } from 'react-dropzone';
 import Modal from 'react-responsive-modal';
 
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import {
-  decrement,
-  increment,
-  incrementByAmount,
-  incrementAsync,
-  incrementIfOdd,
-  selectCount,
+    decrement,
+    increment,
+    selectCount,
 } from './counterSlice';
+import { FileObject } from './types';
+
 import styles from './Counter.module.css';
 
+const maxFiles = 1
+const multiple = maxFiles > 1;
+
 export function Counter() {
-  const count = useAppSelector(selectCount);
-  const dispatch = useAppDispatch();
-  const [howItWorksIsOpen, setHowItWorksOpen] = useState(false);
+    const dispatch = useAppDispatch();
+    const count = useAppSelector(selectCount);
+    const [isIframeOpen, setIframeOpen] = useState(false);
 
-  return (
-      <div>
-        <div className={styles.row}>
-          <button
-              className={styles.button}
-              aria-label="Decrement value"
-              onClick={() => dispatch(decrement())}
-          >
-            -
-          </button>
-          <span className={styles.value}>{count}</span>
-          <button
-              className={styles.button}
-              aria-label="Increment value"
-              onClick={() => dispatch(increment())}
-          >
-            +
-          </button>
-        </div>
-        <div className={styles.row}>
-          {/*<input*/}
-          {/*  className={styles.textbox}*/}
-          {/*  aria-label="Set increment amount"*/}
-          {/*  value={incrementAmount}*/}
-          {/*  onChange={(e) => setIncrementAmount(e.target.value)}*/}
-          {/*/>*/}
-          {/*<button*/}
-          {/*  className={styles.button}*/}
-          {/*  onClick={() => dispatch(incrementByAmount(incrementValue))}*/}
-          {/*>*/}
-          {/*  Add Amount*/}
-          {/*</button>*/}
-          {/*<button*/}
-          {/*  className={styles.asyncButton}*/}
-          {/*  onClick={() => dispatch(incrementAsync(incrementValue))}*/}
-          {/*>*/}
-          {/*  Add Async*/}
-          {/*</button>*/}
-          <button
-              className={styles.button}
-              onClick={() => setHowItWorksOpen(true)}
-          >
-            Add If Odd
-          </button>
-        </div>
+    const [fileObjects, setFileObjects] = useState<FileObject[]>([]);
+    const disabled = fileObjects.length === maxFiles;
 
-        <Modal
-            open={howItWorksIsOpen}
-            onClose={() => setHowItWorksOpen(false)}
-            closeOnEsc={true}
-            center={true}
-        >
-          <iframe id="df-iframe"
-                  title="DF Iframe Example"
-                  frameBorder="0"
-                  allow="fullscreen"
-                  src="http://localhost:3000/">
-          </iframe>
-        </Modal>
-      </div>
-  );
+    const handleDropAccepted: DropzoneOptions['onDropAccepted'] = (acceptedFiles, evt) => {
+        const fileObjs = acceptedFiles.map(file => {
+            return {
+                uuid: nanoid(),
+                file,
+            };
+        })
+
+        // Notify added files
+        setFileObjects(exists => {
+            // Handle a single file
+            if (maxFiles <= 1) {
+                return [fileObjs[0]];
+            }
+
+            // Handle multiple files
+            return exists.concat(fileObjs);
+        });
+    };
+
+    const handleRemove = (uuit: string) => (event: MouseEvent) => {
+        event.stopPropagation(); // case into dropzone
+
+        // Update local state
+        setFileObjects(exists => exists.filter(fileObject => fileObject.uuid !== uuit));
+    };
+
+    const {
+        getRootProps,
+        getInputProps,
+        isDragActive,
+    } = useDropzone({
+        // onDrop,
+        onDropAccepted: handleDropAccepted,
+        multiple,
+        disabled,
+        maxFiles,
+    });
+
+    return (
+        <div>
+            <div className={cn(styles.row, {'hidden': disabled})}>
+                <div {...getRootProps()}>
+                    <input {...getInputProps()} />
+                    <p>Drop file here, or click to select file</p>
+                </div>
+            </div>
+            <div className={cn(styles.row, {'hidden': !disabled})}>
+                {fileObjects.map(fileObject => (
+                    <button
+                        key={fileObject.uuid}
+                        title='Click to remove'
+                        // @ts-ignore
+                        onClick={handleRemove(fileObject.uuid)}
+                    >
+                        {fileObject.file.name}
+                    </button>
+                ))}
+            </div>
+
+            <div className={styles.row}>
+                <button
+                    className={styles.button}
+                    onClick={() => setIframeOpen(true)}
+                >
+                    Open Iframe
+                </button>
+            </div>
+
+            <Modal
+                open={isIframeOpen}
+                onClose={() => setIframeOpen(false)}
+                closeOnEsc={true}
+                center={true}
+                classNames={{
+                    modal: styles.popup,
+                }}
+            >
+                <iframe id="df-iframe"
+                        title="DF Iframe Example"
+                        width="800"
+                        height="720"
+                        frameBorder="0"
+                        allow="fullscreen"
+                        src="http://localhost:4200/4taps/widget/cart">
+                </iframe>
+            </Modal>
+        </div>
+    );
 }
