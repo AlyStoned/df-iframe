@@ -5,19 +5,16 @@ import { useDropzone, DropzoneOptions } from 'react-dropzone';
 import Modal from 'react-responsive-modal';
 
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import {
-    decrement,
-    increment,
-    selectCount,
-} from './counterSlice';
+import { decrement, increment, selectCount } from './counterSlice';
 import { FileObject } from './types';
+import { Iframe } from './Iframe';
 
-import styles from './Counter.module.css';
+import styles from './FileHandler.module.css';
 
-const maxFiles = 1
+const maxFiles = 1;
 const multiple = maxFiles > 1;
 
-export function Counter() {
+export function FileHandler() {
     const dispatch = useAppDispatch();
     const count = useAppSelector(selectCount);
     const [isIframeOpen, setIframeOpen] = useState(false);
@@ -31,7 +28,7 @@ export function Counter() {
                 uuid: nanoid(),
                 file,
             };
-        })
+        });
 
         // Notify added files
         setFileObjects(exists => {
@@ -52,11 +49,7 @@ export function Counter() {
         setFileObjects(exists => exists.filter(fileObject => fileObject.uuid !== uuit));
     };
 
-    const {
-        getRootProps,
-        getInputProps,
-        isDragActive,
-    } = useDropzone({
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
         // onDrop,
         onDropAccepted: handleDropAccepted,
         multiple,
@@ -66,17 +59,17 @@ export function Counter() {
 
     return (
         <div>
-            <div className={cn(styles.row, {'hidden': disabled})}>
+            <div className={cn(styles.row, { hidden: disabled })}>
                 <div {...getRootProps()}>
                     <input {...getInputProps()} />
                     <p>Drop file here, or click to select file</p>
                 </div>
             </div>
-            <div className={cn(styles.row, {'hidden': !disabled})}>
+            <div className={cn(styles.row, { hidden: !disabled })}>
                 {fileObjects.map(fileObject => (
                     <button
                         key={fileObject.uuid}
-                        title='Click to remove'
+                        title="Click to remove"
                         // @ts-ignore
                         onClick={handleRemove(fileObject.uuid)}
                     >
@@ -86,10 +79,7 @@ export function Counter() {
             </div>
 
             <div className={styles.row}>
-                <button
-                    className={styles.button}
-                    onClick={() => setIframeOpen(true)}
-                >
+                <button className={styles.button} onClick={() => setIframeOpen(true)}>
                     Open Iframe
                 </button>
             </div>
@@ -103,14 +93,7 @@ export function Counter() {
                     modal: styles.popup,
                 }}
             >
-                <iframe id="df-iframe"
-                        title="DF Iframe Example"
-                        width="800"
-                        height="720"
-                        frameBorder="0"
-                        allow="fullscreen"
-                        src="http://localhost:4200/4taps/widget/cart">
-                </iframe>
+                <Iframe />
             </Modal>
         </div>
     );
