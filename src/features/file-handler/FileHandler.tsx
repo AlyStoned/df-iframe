@@ -1,11 +1,12 @@
 import cn from 'classnames';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { nanoid } from '@reduxjs/toolkit';
 import { useDropzone, DropzoneOptions } from 'react-dropzone';
 import Modal from 'react-responsive-modal';
 
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { decrement, increment, selectCount } from './counterSlice';
+// import { useAppSelector, useAppDispatch } from '../../app/hooks';
+// import { decrement, increment, selectCount } from './counterSlice';
+import { ClientExposedAPI } from '../../utils';
 import { FileObject } from './types';
 import { Iframe } from './Iframe';
 
@@ -15,8 +16,10 @@ const maxFiles = 1;
 const multiple = maxFiles > 1;
 
 export function FileHandler() {
-    const dispatch = useAppDispatch();
-    const count = useAppSelector(selectCount);
+    // const dispatch = useAppDispatch();
+    // const count = useAppSelector(selectCount);
+    const exposedAPI = useRef<ClientExposedAPI>();
+
     const [isIframeOpen, setIframeOpen] = useState(false);
 
     const [fileObjects, setFileObjects] = useState<FileObject[]>([]);
@@ -93,7 +96,7 @@ export function FileHandler() {
                     modal: styles.popup,
                 }}
             >
-                <Iframe />
+                <Iframe src="http://localhost:4200/4taps/widget/cart" />
             </Modal>
         </div>
     );

@@ -1,57 +1,44 @@
-import React, { useEffect, useCallback } from 'react';
-import { wrap, windowEndpoint } from 'comlink';
+import React, { EmbedHTMLAttributes, useEffect, useCallback, useRef } from 'react';
+import { ClientExposedAPI } from '../../utils';
 
-const iframeUrl = 'http://localhost:4200/4taps/widget/cart';
-// const iframeUrl = 'https://surma.dev/things/comlink-webrtc/index.html';
-const { port1, port2 } = new MessageChannel();
+interface IFrameProps extends EmbedHTMLAttributes<HTMLIFrameElement> {
+    exposedAPI: ClientExposedAPI;
+}
 
-export function Iframe() {
-    let frame: HTMLIFrameElement | null = null;
+export function Iframe({ exposedAPI, src, ...props }: IFrameProps) {
+    let iframe: HTMLIFrameElement | null = null;
 
-    // function onClick(e) {
-    //     e.preventDefault();
-    //     port1.postMessage(input.value);
-    // }
-
-    const handleReceiveMessage = useCallback(e => {
-        console.log('message');
-        console.log(e.data);
-    }, []);
-
-    const handleIframeLoad = useCallback(() => {
+    const handleIframeLoad = useCallback(async () => {
         console.log('load');
-
-        // Listen for messages on port1
-        port1.onmessage = handleReceiveMessage;
-        // Transfer port2 to the iframe
-        frame?.contentWindow?.postMessage('Hello from the main page!', iframeUrl, [port2]);
-    }, [frame, handleReceiveMessage]);
+        exposedAPI.current = new ClientExposedAPI(src!, iframe!);
+        exposedAPI.current.on('ready', async event => {
+            console.log('result 1 + 3 = ', await event.data(1, 3));
+        });
+    }, [src, iframe]);
 
     useEffect(() => {
-        // if (frame) {
-        //     await new Promise(resolve => (frame.onload = resolve));
-        //     const f = wrap(windowEndpoint(frame.contentWindow));
-        //     alert(`1 + 3 = ${await f(1, 3)}`);
-        // }
-        // frame && frame.addEventListener('load', handleIframeLoad);
-        // window.addEventListener('message', handleReceiveMessage);
-        // return () => {
-        //     window.removeEventListener('message', handleReceiveMessage, false);
-        // };
-    }, [frame, handleIframeLoad]);
+        if (iframe) {
+            iframe.addEventListener('load', handleIframeLoad);
+        }
+
+        return () => {
+            exposedAPI.current?.destroy();
+        };
+    }, [iframe, handleIframeLoad]);
 
     return (
         <iframe
             id="df-iframe"
             title="DF Iframe Example"
-            width="800"
+            width="1024"
             height="720"
             frameBorder="0"
             allow="fullscreen"
-            src={iframeUrl}
+            src={src}
             ref={ref => {
-                frame = ref as HTMLIFrameElement;
+                iframe = ref as HTMLIFrameElement;
             }}
+            {...props}
         />
     );
 }
