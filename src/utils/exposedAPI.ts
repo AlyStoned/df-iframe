@@ -1,7 +1,16 @@
 import { Remote, releaseProxy, wrap } from 'comlink';
 import { EventEmitter } from '@billjs/event-emitter';
+import { ExcludeConditionally, FilterConditionally } from '../types';
 
-export type ExposedAPI = (a: number, b: number) => number;
+export interface ExposedAPI {
+    transferModels: (files: File[]) => void;
+    add: (a: number, b: number) => number;
+    test: (a: boolean, c: string) => number;
+    field: number;
+}
+
+export type ExposedAPIFields = ExcludeConditionally<ExposedAPI, Function>;
+export type ExposedAPIMethods = FilterConditionally<ExposedAPI, Function>;
 
 export class ClientExposedAPI extends EventEmitter {
     public url: URL;
@@ -47,10 +56,18 @@ export class ClientExposedAPI extends EventEmitter {
         this.off();
     }
 
-    public async call(name: string, ...args: any[]) {
+    public async call<T extends keyof ExposedAPIMethods>(name: T, ...args: Parameters<ExposedAPIMethods[T]>) {
         if (!this.ready) return;
 
-        await this.api!(5, 3);
+        const method = this.api![name];
+        await Reflect.apply(method, this.api, args);
+        // await method(...args);
+    }
+
+    public async get<T extends keyof ExposedAPIFields>(name: T) {
+        if (!this.ready) return;
+
+        await Reflect.get(this.api!, name);
     }
 
     public get ready() {

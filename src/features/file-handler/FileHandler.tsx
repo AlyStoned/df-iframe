@@ -61,7 +61,12 @@ export function FileHandler() {
     });
 
     const onAPIReady = useCallback(async event => {
-        console.log('result 1 + 3 = ', await event.data(1, 3));
+        console.log('result 1 + 3 = ', await event.data.add(1, 3));
+        // console.log('result 1 + 3 = ', await event.data.add(1, 3));
+        // console.log('field = ', await event.data.field);
+        // console.log('test', exposedAPI.current && exposedAPI.current.call('test', false, '343'));
+        // exposedAPI.current && exposedAPI.current.call('add', 3, 6);
+        // exposedAPI.current && exposedAPI.current.api?.add(3, 6);
     }, []);
 
     return (

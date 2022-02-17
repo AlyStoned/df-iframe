@@ -1,4 +1,4 @@
-import React, { EmbedHTMLAttributes, useEffect, useCallback, MutableRefObject } from 'react';
+import React, { EmbedHTMLAttributes, MutableRefObject, useEffect, useCallback } from 'react';
 import { Event } from '@billjs/event-emitter';
 import { ClientExposedAPI } from '../../utils';
 
@@ -11,7 +11,7 @@ export function Iframe({ exposedAPI, onAPIReady, src, ...props }: IFrameProps) {
     let iframe: HTMLIFrameElement | null = null;
 
     const handleIframeLoad = useCallback(async () => {
-        console.log('load');
+        // console.log('load');
         exposedAPI.current = new ClientExposedAPI(src!, iframe!);
         onAPIReady && exposedAPI.current.on('ready', onAPIReady);
     }, [exposedAPI, onAPIReady, src, iframe]);
@@ -23,6 +23,7 @@ export function Iframe({ exposedAPI, onAPIReady, src, ...props }: IFrameProps) {
 
         return () => {
             exposedAPI.current?.destroy();
+            exposedAPI.current = undefined;
         };
     }, [exposedAPI, iframe, handleIframeLoad]);
 
