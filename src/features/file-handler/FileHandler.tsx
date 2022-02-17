@@ -60,6 +60,10 @@ export function FileHandler() {
         maxFiles,
     });
 
+    const onAPIReady = useCallback(async event => {
+        console.log('result 1 + 3 = ', await event.data(1, 3));
+    }, []);
+
     return (
         <div>
             <div className={cn(styles.row, { hidden: disabled })}>
@@ -96,7 +100,7 @@ export function FileHandler() {
                     modal: styles.popup,
                 }}
             >
-                <Iframe src="http://localhost:4200/4taps/widget/cart" />
+                <Iframe exposedAPI={exposedAPI} onAPIReady={onAPIReady} src="http://localhost:4200/4taps/widget/cart" />
             </Modal>
         </div>
     );

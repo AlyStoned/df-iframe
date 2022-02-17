@@ -34,17 +34,7 @@ export class ClientExposedAPI extends EventEmitter {
         this.fire('ready', this.api);
     }
 
-    public get ready() {
-        return Boolean(this.port && this.api);
-    }
-
-    public async call(name: string, ...args: any[]) {
-        if (!this.ready) return;
-
-        await this.api!(5, 3);
-    }
-
-    public init() {
+    private init() {
         // Listen for the initial port transfer message
         window.addEventListener('message', this.handleInitMessage);
     }
@@ -55,5 +45,15 @@ export class ClientExposedAPI extends EventEmitter {
         this.api && this.api[releaseProxy]();
         this.fire('destroy');
         this.off();
+    }
+
+    public async call(name: string, ...args: any[]) {
+        if (!this.ready) return;
+
+        await this.api!(5, 3);
+    }
+
+    public get ready() {
+        return Boolean(this.port && this.api);
     }
 }
