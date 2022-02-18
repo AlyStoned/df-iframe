@@ -13,19 +13,20 @@ export function Iframe({ exposedAPI, onAPIReady, src, ...props }: IFrameProps) {
     const handleIframeLoad = useCallback(async () => {
         // console.log('load');
         exposedAPI.current = new ClientExposedAPI(src!, iframe!);
-        onAPIReady && exposedAPI.current.on('ready', onAPIReady);
+        onAPIReady && exposedAPI.current.once('ready', onAPIReady);
     }, [exposedAPI, onAPIReady, src, iframe]);
 
     useEffect(() => {
         if (iframe) {
-            iframe.addEventListener('load', handleIframeLoad);
+            iframe.addEventListener('load', handleIframeLoad, { once: true });
         }
 
         return () => {
             exposedAPI.current?.destroy();
             exposedAPI.current = undefined;
         };
-    }, [exposedAPI, iframe, handleIframeLoad]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [iframe]);
 
     return (
         <iframe

@@ -3,7 +3,9 @@ import { EventEmitter } from '@billjs/event-emitter';
 import { ExcludeConditionally, FilterConditionally } from '../types';
 
 export interface ExposedAPI {
-    transferModels: (files: File[]) => void;
+    models: {
+        transfer: (files: File[]) => void;
+    };
     add: (a: number, b: number) => number;
     test: (a: boolean, c: string) => number;
     field: number;
@@ -49,7 +51,7 @@ export class ClientExposedAPI extends EventEmitter {
     }
 
     public destroy() {
-        console.log('destroy');
+        // console.log('destroy');
         window.removeEventListener('message', this.handleInitMessage);
         this.api && this.api[releaseProxy]();
         this.fire('destroy');

@@ -12,6 +12,8 @@ import { Iframe } from './Iframe';
 
 import styles from './FileHandler.module.css';
 
+const iframeSrc = 'https://app-test.digifabster.com/4taps/widget/upload';
+// const iframeSrc = 'http://localhost:4200/4taps/widget/cart';
 const maxFiles = 1;
 const multiple = maxFiles > 1;
 
@@ -60,14 +62,24 @@ export function FileHandler() {
         maxFiles,
     });
 
-    const onAPIReady = useCallback(async event => {
-        console.log('result 1 + 3 = ', await event.data.add(1, 3));
-        // console.log('result 1 + 3 = ', await event.data.add(1, 3));
-        // console.log('field = ', await event.data.field);
-        // console.log('test', exposedAPI.current && exposedAPI.current.call('test', false, '343'));
-        // exposedAPI.current && exposedAPI.current.call('add', 3, 6);
-        // exposedAPI.current && exposedAPI.current.api?.add(3, 6);
-    }, []);
+    const onAPIReady = useCallback(
+        async event => {
+            if (fileObjects.length) {
+                // console.log('onAPIReady', fileObjects);
+                await event.data.models.transfer(fileObjects.map(fileObject => fileObject.file));
+
+                // reset dropzone files
+                setFileObjects([]);
+            }
+
+            // console.log('result 1 + 3 = ', await event.data.add(1, 3));
+            // console.log('field = ', await event.data.field);
+            // console.log('test', exposedAPI.current && exposedAPI.current.call('test', false, '343'));
+            // exposedAPI.current && exposedAPI.current.call('add', 3, 6);
+            // exposedAPI.current && exposedAPI.current.api?.add(3, 6);
+        },
+        [fileObjects],
+    );
 
     return (
         <div>
@@ -105,7 +117,7 @@ export function FileHandler() {
                     modal: styles.popup,
                 }}
             >
-                <Iframe exposedAPI={exposedAPI} onAPIReady={onAPIReady} src="http://localhost:4200/4taps/widget/cart" />
+                <Iframe exposedAPI={exposedAPI} onAPIReady={onAPIReady} src={iframeSrc} />
             </Modal>
         </div>
     );
