@@ -1,10 +1,10 @@
 import cn from 'classnames';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useDropzone, DropzoneOptions } from 'react-dropzone';
-import { Event } from '@billjs/event-emitter';
 
 import { FileObject } from './types';
 import { exposedApi, nanoid } from '../../utils';
+import { DigifabsterCloseWidgetClassname, DigifabsterOpenWidgetBtnSelector } from '../../constants';
 
 import styles from './FileHandler.module.css';
 
@@ -42,7 +42,7 @@ export function FileHandler() {
         setFileObjects(exists => exists.filter(fileObject => fileObject.uuid !== uuit));
     };
 
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    const { getRootProps, getInputProps } = useDropzone({
         // onDrop,
         onDropAccepted: handleDropAccepted,
         multiple,
@@ -50,37 +50,32 @@ export function FileHandler() {
         maxFiles,
     });
 
-    const transferModels = useCallback(
-        async event => {
-            if (fileObjects.length) {
-                // console.log('onAPIReady', fileObjects);
-                await event.data.models.transfer(fileObjects.map(fileObject => fileObject.file));
+    const transferModels = useCallback(async () => {
+        if (fileObjects.length) {
+            // console.log('onAPIReady', fileObjects);
+            await exposedApi.call(
+                'transferModels',
+                fileObjects.map(fileObject => fileObject.file),
+            );
+            // console.log('result 1 + 3 = ', await exposedApi.call('add', 3, 6));
 
-                // reset dropzone files
-                setFileObjects([]);
-            }
-
-            // console.log('result 1 + 3 = ', await event.data.add(1, 3));
-            // console.log('field = ', await event.data.field);
-            // console.log('test', exposedAPI.current && exposedAPI.current.call('test', false, '343'));
-            // exposedAPI.current && exposedAPI.current.call('add', 3, 6);
-            // exposedAPI.current && exposedAPI.current.api?.add(3, 6);
-        },
-        [fileObjects],
-    );
-
-    // transferModels && exposedAPI.current.once('ready', transferModels);
-    // onAPIReady?: (event: Event) => void;
-
-    const handleDocumentClick = useCallback(event => {
-        const element = event.target;
-
-        if (element.classList.contains('df-widget-close')) {
-            console.log(event.target);
-        } else if (element.closest('#df-widget-btn')) {
-            console.log(event.target, 'element.id');
+            // reset dropzone files
+            setFileObjects([]);
         }
-    }, []);
+    }, [fileObjects]);
+
+    const handleDocumentClick = useCallback(
+        event => {
+            const element = event.target;
+
+            if (element.classList.contains(DigifabsterCloseWidgetClassname)) {
+                // console.log(event.target);
+            } else if (element.closest(DigifabsterOpenWidgetBtnSelector)) {
+                transferModels();
+            }
+        },
+        [transferModels],
+    );
 
     useEffect(() => {
         document.addEventListener('click', handleDocumentClick);

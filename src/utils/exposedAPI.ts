@@ -1,23 +1,18 @@
 import { Remote, releaseProxy, wrap } from 'comlink';
 import { EventEmitter } from '@billjs/event-emitter';
 import { ExcludeConditionally, FilterConditionally } from '../types';
-import { DigifabsterScriptSrc } from '../constants';
+import { DigifabsterScriptSrc, DigifabsterIframeSrc } from '../constants';
 
 export interface ExposedAPI {
-    models: {
-        transfer: (files: File[]) => void;
-    };
+    transferModels: (files: File[]) => void;
     add: (a: number, b: number) => number;
-    test: (a: boolean, c: string) => number;
-    field: number;
 }
 
 export type ExposedAPIFields = ExcludeConditionally<ExposedAPI, Function>;
 export type ExposedAPIMethods = FilterConditionally<ExposedAPI, Function>;
 
 export class ClientExposedAPI extends EventEmitter {
-    // public readonly src: string = 'http://localhost:4200/4taps/widget/cart';
-    public readonly src: string = 'https://app-test.digifabster.com/4taps/widget/upload';
+    public readonly src: string = DigifabsterIframeSrc;
     public url: URL;
     public api?: Remote<ExposedAPI>;
     private port?: MessagePort;
@@ -50,6 +45,7 @@ export class ClientExposedAPI extends EventEmitter {
 
     private handleDocumentReady() {
         const that = this;
+
         const script = document.querySelector(`script[src="${DigifabsterScriptSrc}"]`);
         script?.addEventListener(
             'load',
@@ -81,17 +77,25 @@ export class ClientExposedAPI extends EventEmitter {
     }
 
     public async call<T extends keyof ExposedAPIMethods>(name: T, ...args: Parameters<ExposedAPIMethods[T]>) {
-        if (!this.ready) return;
-
+        const that = this;
         const method = this.api![name];
+
+        if (!this.ready) {
+            this.once('ready', async () => {
+                await Reflect.apply(method, that.api, args);
+                // await method(...args);
+            });
+            return;
+        }
+
         await Reflect.apply(method, this.api, args);
         // await method(...args);
     }
 
     public async get<T extends keyof ExposedAPIFields>(name: T) {
-        if (!this.ready) return;
+        if (!this.ready) return Promise.resolve();
 
-        await Reflect.get(this.api!, name);
+        return await Reflect.get(this.api!, name);
     }
 
     public get ready() {
