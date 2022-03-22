@@ -1,29 +1,17 @@
 import cn from 'classnames';
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { nanoid } from '@reduxjs/toolkit';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDropzone, DropzoneOptions } from 'react-dropzone';
-import Modal from 'react-responsive-modal';
+import { Event } from '@billjs/event-emitter';
 
-// import { useAppSelector, useAppDispatch } from '../../app/hooks';
-// import { decrement, increment, selectCount } from './counterSlice';
-import { ClientExposedAPI } from '../../utils';
 import { FileObject } from './types';
-import { Iframe } from './Iframe';
+import { exposedApi, nanoid } from '../../utils';
 
 import styles from './FileHandler.module.css';
 
-const iframeSrc = 'https://app-test.digifabster.com/4taps/widget/upload';
-// const iframeSrc = 'http://localhost:4200/4taps/widget/cart';
 const maxFiles = 1;
 const multiple = maxFiles > 1;
 
 export function FileHandler() {
-    // const dispatch = useAppDispatch();
-    // const count = useAppSelector(selectCount);
-    const exposedAPI = useRef<ClientExposedAPI>();
-
-    const [isIframeOpen, setIframeOpen] = useState(false);
-
     const [fileObjects, setFileObjects] = useState<FileObject[]>([]);
     const disabled = fileObjects.length === maxFiles;
 
@@ -62,7 +50,7 @@ export function FileHandler() {
         maxFiles,
     });
 
-    const onAPIReady = useCallback(
+    const transferModels = useCallback(
         async event => {
             if (fileObjects.length) {
                 // console.log('onAPIReady', fileObjects);
@@ -80,6 +68,26 @@ export function FileHandler() {
         },
         [fileObjects],
     );
+
+    // transferModels && exposedAPI.current.once('ready', transferModels);
+    // onAPIReady?: (event: Event) => void;
+
+    const handleDocumentClick = useCallback(event => {
+        const element = event.target;
+
+        if (element.classList.contains('df-widget-close')) {
+            console.log(event.target);
+        } else if (element.closest('#df-widget-btn')) {
+            console.log(event.target, 'element.id');
+        }
+    }, []);
+
+    useEffect(() => {
+        document.addEventListener('click', handleDocumentClick);
+        return () => {
+            document.removeEventListener('click', handleDocumentClick);
+        };
+    }, [handleDocumentClick]);
 
     return (
         <div>
@@ -101,24 +109,6 @@ export function FileHandler() {
                     </button>
                 ))}
             </div>
-
-            <div className={styles.row}>
-                <button className={styles.button} onClick={() => setIframeOpen(true)}>
-                    Open Iframe
-                </button>
-            </div>
-
-            <Modal
-                open={isIframeOpen}
-                onClose={() => setIframeOpen(false)}
-                closeOnEsc={true}
-                center={true}
-                classNames={{
-                    modal: styles.popup,
-                }}
-            >
-                <Iframe exposedAPI={exposedAPI} onAPIReady={onAPIReady} src={iframeSrc} />
-            </Modal>
         </div>
     );
 }

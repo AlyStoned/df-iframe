@@ -1,6 +1,7 @@
 import { Remote, releaseProxy, wrap } from 'comlink';
 import { EventEmitter } from '@billjs/event-emitter';
 import { ExcludeConditionally, FilterConditionally } from '../types';
+import { DigifabsterScriptSrc } from '../constants';
 
 export interface ExposedAPI {
     models: {
@@ -15,18 +16,20 @@ export type ExposedAPIFields = ExcludeConditionally<ExposedAPI, Function>;
 export type ExposedAPIMethods = FilterConditionally<ExposedAPI, Function>;
 
 export class ClientExposedAPI extends EventEmitter {
+    // public readonly src: string = 'http://localhost:4200/4taps/widget/cart';
+    public readonly src: string = 'https://app-test.digifabster.com/4taps/widget/upload';
     public url: URL;
-    public iframe: HTMLIFrameElement;
     public api?: Remote<ExposedAPI>;
     private port?: MessagePort;
 
-    constructor(src: string, iframe: HTMLIFrameElement) {
+    constructor() {
         super();
-        this.url = new URL(src);
-        this.iframe = iframe;
+        this.url = new URL(this.src);
 
+        this.handleDocumentReady = this.handleDocumentReady.bind(this);
         this.handleInitMessage = this.handleInitMessage.bind(this);
-        this.init();
+
+        document.addEventListener('DOMContentLoaded', this.handleDocumentReady);
     }
 
     private handleInitMessage(event: MessageEvent) {
@@ -43,6 +46,25 @@ export class ClientExposedAPI extends EventEmitter {
     private setupApi(port: MessagePort) {
         this.api = wrap<ExposedAPI>(port);
         this.fire('ready', this.api);
+    }
+
+    private handleDocumentReady() {
+        const that = this;
+        const script = document.querySelector(`script[src="${DigifabsterScriptSrc}"]`);
+        script?.addEventListener(
+            'load',
+            function () {
+                const iframe = document.querySelector(`iframe[src^="${window.__digifabsterCompanyWidgetUrl}"]`);
+                iframe?.addEventListener(
+                    'load',
+                    () => {
+                        that.init();
+                    },
+                    { once: true },
+                );
+            },
+            { once: true },
+        );
     }
 
     private init() {
@@ -76,3 +98,5 @@ export class ClientExposedAPI extends EventEmitter {
         return Boolean(this.port && this.api);
     }
 }
+
+export const exposedApi = new ClientExposedAPI();

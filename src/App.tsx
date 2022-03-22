@@ -1,5 +1,6 @@
 import React from 'react';
-import { FileHandler } from './features/file-handler/FileHandler';
+import { FileHandler } from './components/file-handler/FileHandler';
+
 import logo from './logo.svg';
 import './App.css';
 
