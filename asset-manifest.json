@@ -1,24 +1,21 @@
 {
   "files": {
-    "main.css": "https://alystoned.github.io/df-iframe/static/css/main.d228f3c5.chunk.css",
-    "main.js": "https://alystoned.github.io/df-iframe/static/js/main.fe3aa3b9.chunk.js",
-    "main.js.map": "https://alystoned.github.io/df-iframe/static/js/main.fe3aa3b9.chunk.js.map",
-    "runtime-main.js": "https://alystoned.github.io/df-iframe/static/js/runtime-main.c9a78ffc.js",
-    "runtime-main.js.map": "https://alystoned.github.io/df-iframe/static/js/runtime-main.c9a78ffc.js.map",
-    "static/css/2.b6f7359a.chunk.css": "https://alystoned.github.io/df-iframe/static/css/2.b6f7359a.chunk.css",
-    "static/js/2.dbb99e97.chunk.js": "https://alystoned.github.io/df-iframe/static/js/2.dbb99e97.chunk.js",
-    "static/js/2.dbb99e97.chunk.js.map": "https://alystoned.github.io/df-iframe/static/js/2.dbb99e97.chunk.js.map",
+    "main.css": "https://alystoned.github.io/df-iframe/static/css/main.d7d9e82b.chunk.css",
+    "main.js": "https://alystoned.github.io/df-iframe/static/js/main.ebfbddd9.chunk.js",
+    "main.js.map": "https://alystoned.github.io/df-iframe/static/js/main.ebfbddd9.chunk.js.map",
+    "runtime-main.js": "https://alystoned.github.io/df-iframe/static/js/runtime-main.054d5bdd.js",
+    "runtime-main.js.map": "https://alystoned.github.io/df-iframe/static/js/runtime-main.054d5bdd.js.map",
+    "static/js/2.ab8aa121.chunk.js": "https://alystoned.github.io/df-iframe/static/js/2.ab8aa121.chunk.js",
+    "static/js/2.ab8aa121.chunk.js.map": "https://alystoned.github.io/df-iframe/static/js/2.ab8aa121.chunk.js.map",
     "index.html": "https://alystoned.github.io/df-iframe/index.html",
-    "static/css/2.b6f7359a.chunk.css.map": "https://alystoned.github.io/df-iframe/static/css/2.b6f7359a.chunk.css.map",
-    "static/css/main.d228f3c5.chunk.css.map": "https://alystoned.github.io/df-iframe/static/css/main.d228f3c5.chunk.css.map",
-    "static/js/2.dbb99e97.chunk.js.LICENSE.txt": "https://alystoned.github.io/df-iframe/static/js/2.dbb99e97.chunk.js.LICENSE.txt",
+    "static/css/main.d7d9e82b.chunk.css.map": "https://alystoned.github.io/df-iframe/static/css/main.d7d9e82b.chunk.css.map",
+    "static/js/2.ab8aa121.chunk.js.LICENSE.txt": "https://alystoned.github.io/df-iframe/static/js/2.ab8aa121.chunk.js.LICENSE.txt",
     "static/media/logo.183d3140.svg": "https://alystoned.github.io/df-iframe/static/media/logo.183d3140.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.c9a78ffc.js",
-    "static/css/2.b6f7359a.chunk.css",
-    "static/js/2.dbb99e97.chunk.js",
-    "static/css/main.d228f3c5.chunk.css",
-    "static/js/main.fe3aa3b9.chunk.js"
+    "static/js/runtime-main.054d5bdd.js",
+    "static/js/2.ab8aa121.chunk.js",
+    "static/css/main.d7d9e82b.chunk.css",
+    "static/js/main.ebfbddd9.chunk.js"
   ]
 }
