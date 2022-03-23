@@ -5,7 +5,6 @@ import { DigifabsterScriptSrc, DigifabsterIframeSrc } from '../constants';
 
 export interface ExposedAPI {
     transferModels: (files: File[]) => void;
-    add: (a: number, b: number) => number;
 }
 
 export type ExposedAPIFields = ExcludeConditionally<ExposedAPI, Function>;

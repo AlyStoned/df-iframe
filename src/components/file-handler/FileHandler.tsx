@@ -52,12 +52,10 @@ export function FileHandler() {
 
     const transferModels = useCallback(async () => {
         if (fileObjects.length) {
-            // console.log('onAPIReady', fileObjects);
             await exposedApi.call(
                 'transferModels',
                 fileObjects.map(fileObject => fileObject.file),
             );
-            // console.log('result 1 + 3 = ', await exposedApi.call('add', 3, 6));
 
             // reset dropzone files
             setFileObjects([]);
