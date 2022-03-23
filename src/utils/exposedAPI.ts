@@ -75,20 +75,22 @@ export class ClientExposedAPI extends EventEmitter {
         this.off();
     }
 
-    public async call<T extends keyof ExposedAPIMethods>(name: T, ...args: Parameters<ExposedAPIMethods[T]>) {
-        const that = this;
+    private async _call<T extends keyof ExposedAPIMethods>(name: T, ...args: Parameters<ExposedAPIMethods[T]>) {
         const method = this.api![name];
+        await Reflect.apply(method, this.api, args);
+        // await method(...args);
+    }
 
-        if (!this.ready) {
-            this.once('ready', async () => {
-                await Reflect.apply(method, that.api, args);
-                // await method(...args);
-            });
+    public call<T extends keyof ExposedAPIMethods>(name: T, ...args: Parameters<ExposedAPIMethods[T]>) {
+        if (this.ready) {
+            this._call(name, ...args)
             return;
         }
 
-        await Reflect.apply(method, this.api, args);
-        // await method(...args);
+        const that = this;
+        this.once('ready', async () => {
+            that._call(name, ...args)
+        });
     }
 
     public async get<T extends keyof ExposedAPIFields>(name: T) {

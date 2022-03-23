@@ -50,9 +50,9 @@ export function FileHandler() {
         maxFiles,
     });
 
-    const transferModels = useCallback(async () => {
+    const transferModels = useCallback(() => {
         if (fileObjects.length) {
-            await exposedApi.call(
+            exposedApi.call(
                 'transferModels',
                 fileObjects.map(fileObject => fileObject.file),
             );

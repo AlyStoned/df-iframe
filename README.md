@@ -1,44 +1,51 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
+## Install project
+Clone repo:
+```bash
+git clone https://github.com/AlyStoned/df-iframe.git
+```
 
-## Available Scripts
+Install yarn:
+```bash
+npm install --global yarn
+yarn --version
+```
 
-In the project directory, you can run:
+Install project deps (in the project directory):
+```bash
+yarn install
+```
 
-### `yarn start`
+Start local server:
+```bash
+yarn start
+```
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Explanation
+This is an example of using the exposed API of DF application (app.digifabster.com).
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Exposed API - properties and functions of the DF application that you can use from another browser window.
 
-### `yarn test`
+We rely on the [channel messaging](https://developer.mozilla.org/en-US/docs/Web/API/Channel_Messaging_API/Using_channel_messaging) from the browser API to expose our application's API. To simplify that process, we use [comlink](https://github.com/GoogleChromeLabs/comlink), this helps us build a neat way to communicate between windows.
+Comlink is the only peer dependency to use the exposed API since we use it inside the DF application. In this example we've also used [@billjs/event-emitter](https://github.com/billjs/event-emitter) to emit api ready event, but it's not necessary.
+[Here](src/utils/exposedAPI.ts) is a possible implementation of the client part of the API, it's just a wrapper waiting for DF exposed API readiness signal.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Exposed API
 
-### `yarn build`
+The DF application is ready to listen for such calls:
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**_transferModels_**, it takes a list of [File](https://w3c.github.io/FileAPI/#file-section) objects as the first argument.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+Usage example based on our implementation:
+```javascript
+exposedApi.call(
+    'transferModels',
+    fileObjects.map(fileObject => fileObject.file),
+);
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Current API scheme
+```javascript
+interface ExposedAPI {
+    transferModels: (files: File[]) => void;
+}
+```
